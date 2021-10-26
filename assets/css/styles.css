@@ -10,7 +10,7 @@ h2 { font-weight: normal; }
 
 .title {
     background-color: #040F16;
-    color: #01BAEF;
+    color: #B80C09;
     padding: 1.25rem 0;
     text-align: center;
 }
@@ -24,7 +24,13 @@ h2 { font-weight: normal; }
 
 #carts-pc, #carts-player { height: 20vh; }
 
+.player-one { color: #2F4F30; }
+
+.player-two { color: #2F4F30; }
+
 /* FBFBFF */
 /* 2F4F30 */
 /* 01BAEF */
 /* 040F16 */
+/* 0B4F6C */
+/* B80C09 */

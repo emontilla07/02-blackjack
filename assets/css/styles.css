@@ -1,0 +1,30 @@
+html, body {
+    background-color: #FBFBFF;
+    color: #040F16;
+    margin: 0;
+}
+
+h1 { font-weight: normal; }
+
+h2 { font-weight: normal; }
+
+.title {
+    background-color: #040F16;
+    color: #01BAEF;
+    padding: 1.25rem 0;
+    text-align: center;
+}
+
+.cart {
+    left: 6.25rem;
+    margin-left: -4.375rem;
+    position: relative;
+    width: 10vw;
+}
+
+#carts-pc, #carts-player { height: 20vh; }
+
+/* FBFBFF */
+/* 2F4F30 */
+/* 01BAEF */
+/* 040F16 */

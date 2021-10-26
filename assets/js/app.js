@@ -32,4 +32,18 @@ const takeACart = () => {
     return cart;
 }
 
-takeACart();
+// takeACart();
+
+const cartValue = (cart) => {
+    const cartV = cart.substring(0, cart.length - 1);
+    return (isNaN(cartV)) ? 
+            (cartV === 'A') ? 11 : 10
+            : parseInt(cartV);
+    // let points = 0;
+    // if (isNaN(cartV)) points = (cartV === 'A') ? 11 : 10;
+    // else points = parseInt(cartV);
+    // console.log(points);
+}
+
+const cart = cartValue(takeACart());
+console.log({cart});

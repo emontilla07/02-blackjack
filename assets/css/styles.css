@@ -19,10 +19,10 @@ h2 { font-weight: normal; }
     left: 6.25rem;
     margin-left: -4.375rem;
     position: relative;
-    width: 10vw;
+    width: 9.375rem;
 }
 
-#carts-pc, #carts-player { height: 20vh; }
+#carts-pc, #carts-player { height: 30vh; }
 
 .player-one { color: #2F4F30; }
 

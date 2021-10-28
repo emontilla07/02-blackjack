@@ -16,15 +16,15 @@
     <div class="row mt-2">
         <div id="buttons" class="col text-center">
             <button id="btn-new-game" class="btn btn-outline-danger" type="button">Nuevo Juego</button>
-            <button id="btn-take-cart" class="btn btn-outline-primary" type="button">Pedir Carta</button>
-            <button id="btn-stop-game" class="btn btn-outline-primary" type="button">Detener</button>
+            <button id="btn-take-cart" class="btn btn-outline-primary" disabled="disabled" type="button">Pedir Carta</button>
+            <button id="btn-stop-game" class="btn btn-outline-primary" disabled="disabled" type="button">Detener</button>
         </div>
     </div>
 
     <div class="row container">
         <div class="col">
             <h2 class="player-one">Jugador 1 - <small>0</small></h2>
-            <div id="carts-player">
+            <div id="carts-player" class="carts-container">
                 <!-- <img src="assets/cartas/2C.png" alt="Cartas" class="cart"> -->
             </div>
         </div>
@@ -33,7 +33,7 @@
     <div class="row container mt-2">
         <div class="col">
             <h2 class="player-two">Computadora - <small>0</small></h2>
-            <div id="carts-pc">
+            <div id="carts-pc" class="carts-container">
                 <!-- <img src="assets/cartas/2H.png" alt="Cartas" class="cart"> -->
             </div>
         </div>
@@ -41,5 +41,11 @@
 
     <script src="assets/js/underscore-min.js"></script>
     <script src="assets/js/app.js"></script>
+    <script>
+        // console.log(App);
+        document.querySelector('#btn-new-game').addEventListener('click', () => {
+            App.newGame();
+        });
+    </script>
 </body>
 </html>

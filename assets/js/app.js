@@ -1,22 +1,34 @@
-(() => {
+const App = (() => {
     'use strict'
-    
-    let deck         = [];
-    let playerPoints = 0,
-        pcPoints     = 0;
-    const types      = ['C', 'D', 'H', 'S',];
-    const specials   = ['A', 'J', 'Q', 'K',];
-    
+
+    let deck          = [],
+        playersPoints = [];
+    const types       = ['C', 'D', 'H', 'S',],
+          specials    = ['A', 'J', 'Q', 'K',];
+
     // Referencias del HTML
-    const btnTakeCart = document.querySelector('#btn-take-cart');
-    const btnStopGame = document.querySelector('#btn-stop-game');
-    const btnNewGame  = document.querySelector('#btn-new-game');
-    const cartPlayer  = document.querySelector('#carts-player');
-    const cartPc      = document.querySelector('#carts-pc');
-    const points      = document.querySelectorAll('small');
+    const btnTakeCart  = document.querySelector('#btn-take-cart'),
+          btnStopGame  = document.querySelector('#btn-stop-game'),
+          btnNewGame   = document.querySelector('#btn-new-game'),
+          cartsPlayers = document.querySelectorAll('.carts-container'),
+          points       = document.querySelectorAll('small');
+
+    // Función que inicializa el juego
+    const initGame = (numberOfPlayer = 2) => {
+        deck = createDeck();
+        playersPoints = [];
+        for (let i = 0; i < numberOfPlayer; i++) {
+            playersPoints.push(0);
+        }
+        points.forEach(element => element.innerText = 0);
+        cartsPlayers.forEach(element => element.innerHTML = '');
+        btnTakeCart.disabled = false;
+        btnStopGame.disabled = false;
+    }
     
     // Está función crea y revuelve las cartas
     const createDeck = () => {
+        deck = [];
         for ( let i = 2; i <= 10; i++ ) {
             for ( let ty of types ) {
                 deck.push(`${i}${ty}`);
@@ -28,38 +40,41 @@
                 deck.push(`${special}${ty}`);
             }
         }
-        deck = _.shuffle(deck);
-        return deck;
+        return _.shuffle(deck);
     }
-    
-    createDeck();
     
     // Está función permite a los jugadores tomar una carta
     const takeACart = () => {
         if (deck.length === 0) throw 'No hay cartas en el deck';
-        const cart = deck.pop();
-        return cart;
+        return deck.pop();
     }
     
+    // Función para obtener el valor de la carta
     const cartValue = (cart) => {
         const cartV = cart.substring(0, cart.length - 1);
         return (isNaN(cartV)) ? 
                 (cartV === 'A') ? 11 : 10
                 : parseInt(cartV);
     }
-    
-    // Turno computadora
-    const pcTurn = (minimunPoints) => {
-        do {
-            const cart = takeACart();
-            pcPoints += cartValue(cart);
-            points[1].innerText = pcPoints;
-            const cartImg = document.createElement('img');
-            cartImg.src = `assets/cartas/${cart}.png`;
-            cartImg.classList.add('cart');
-            cartPc.append(cartImg);
-            if (minimunPoints > 21) break;
-        } while ((pcPoints < minimunPoints) && (minimunPoints <= 21)); 
+
+    // Turno: 0 = primer jugador y el útlimo será la computadora
+    const accumalatePoints = (cart, turn) => {
+        playersPoints[turn] += cartValue(cart);
+        points[turn].innerText = playersPoints[turn];
+        return playersPoints[turn];
+    }
+
+    // Función para crear las cartas en el DOM
+    const createCarts = (cart, turn) => {
+        const cartImg = document.createElement('img');
+        cartImg.src = `assets/cartas/${cart}.png`;
+        cartImg.classList.add('cart');
+        cartsPlayers[turn].append(cartImg);
+    }
+
+    // Función para validar el ganador
+    const winner = () => {
+        const [minimunPoints, pcPoints] = playersPoints;
         setTimeout(() => {
             if (pcPoints === minimunPoints) alert('Han empatado');
             else if (minimunPoints > 21) alert('La computadora gana');
@@ -68,45 +83,43 @@
         }, 250);
     }
     
+    // Turno computadora
+    const pcTurn = (minimunPoints) => {
+        let pcPoints = 0;
+        do {
+            const cart = takeACart();
+            pcPoints = accumalatePoints(cart, playersPoints.length - 1);
+            createCarts(cart, playersPoints.length - 1);
+        } while ((pcPoints < minimunPoints) && (minimunPoints <= 21)); 
+        winner();
+    }
+    
     // Eventos
     btnTakeCart.addEventListener('click', () => {
         const cart = takeACart();
-        playerPoints += cartValue(cart);
-        points[0].innerText = playerPoints;
-        const cartImg = document.createElement('img');
-        cartImg.src = `assets/cartas/${cart}.png`;
-        cartImg.classList.add('cart');
-        cartPlayer.append(cartImg);
-        if (playerPoints > 21) {
-            console.warn('Lo siento mucho, perdiste');
+        const playerGame = accumalatePoints(cart, 0);
+        createCarts(cart, 0);
+        if (playerGame > 21) {
             btnTakeCart.disabled = true;
-            pcTurn(playerPoints);
-        } else if (playerPoints === 21) {
-            console.warn('¡21, genial!');
+            pcTurn(playerGame);
+        } else if (playerGame === 21) {
             btnTakeCart.disabled = true;
             btnStopGame.disabled = true;
-            pcTurn(playerPoints);
+            pcTurn(playerGame);
         }
+        return playerGame;
     });
     
     btnStopGame.addEventListener('click', () => {
         btnTakeCart.disabled = true;
         btnStopGame.disabled = true;
-        pcTurn(playerPoints);
+        pcTurn(playersPoints[0]);
     });
     
-    btnNewGame.addEventListener('click', () => {
-        console.clear();
-        deck = [];
-        deck = createDeck();
-        btnTakeCart.disabled = false;
-        btnStopGame.disabled = false;
-        cartPlayer.innerHTML = '';
-        cartPc.innerHTML = '';
-        points[0].innerText = 0;
-        points[1].innerText = 0;
-        playerPoints = 0;
-        pcPoints = 0;
-    });
-
+    // btnNewGame.addEventListener('click', () => {
+    //     initGame();
+    // });
+    return {
+        newGame: initGame
+    };
 })();
